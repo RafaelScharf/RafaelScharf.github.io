@@ -25,10 +25,21 @@ export default class Main extends Component {
   // Salvar os Dados no LocalStorage quando componente atualiza.
   componentDidUpdate(_, prevState){
     //Pega lista de repos no state
-    const { repositories } = this.state;
+    const { newRepo, repositories } = this.state;
+
+
     //Compara prevState com o state atual
     if(prevState.repo !== repositories){
-      localStorage.setItem('repositories', JSON.stringify(repositories))
+      repositories.map(repository => {
+        if(newRepo === repository.name){
+          return alert("Repositório ja adicionado");
+          this.setState({
+            newRepo: "",
+          });
+        }else{
+          return localStorage.setItem('repositories', JSON.stringify(repositories))
+        }
+      })
     }
   }
 
@@ -42,7 +53,7 @@ export default class Main extends Component {
     //Seta os estados.
     const { newRepo, repositories } = this.state;
     //verifica se nome do repositório esta vazio.
-    if(newRepo == ""){
+    if(newRepo === ""){
       alert("Por favor, digite algum nome");
 
       }else{
@@ -52,6 +63,7 @@ export default class Main extends Component {
         //[WARNING] Verificar PQ a api.get não ta buscando o baseUrl  
         const response = await api.get(`http://api.github.com/repos/${newRepo}`)
         .then((response) => {
+          //Cria objeto para guardar as informações que for necessária.
           const data = {
             name: response.data.full_name
           };
@@ -70,7 +82,6 @@ export default class Main extends Component {
           alert("Repositório não encontrado!");
         });
         ;
-        //Cria objeto para guardar as informações que for necessária.
        
     }
   };

@@ -1,4 +1,4 @@
-import Styled, { keyframes, css } from "styled-components";
+import Styled from "styled-components";
 
 const Container = Styled.div` 
   max-width: 700px;
