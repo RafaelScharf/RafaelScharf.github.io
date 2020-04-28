@@ -39,23 +39,29 @@ export default class Main extends Component {
 
   handleSubmit = async e => {
     e.preventDefault();
-    //Atribui TRUE ao state para desbilitar botão ao executar função.
-    this.setState({ laoding: true });
     //Seta os estados.
     const { newRepo, repositories } = this.state;
-    //Faz a busca na api do github.
-    //[WARNING] Verificar PQ a api.get não ta buscando o baseUrl  
-    const response = await api.get(`http://api.github.com/repos/${newRepo}`);
-    //Cria objeto para guardar as informações que for necessária.
-    const data = {
-      name: response.data.full_name
-    };
+    //verifica se nome do repositório esta vazio.
+    if(newRepo == ""){
+      alert("Por favor, digite algum nome");
 
-    this.setState({
-      repositories: [...repositories, data],
-      newRepo: "",
-      laoding: false
-    });
+      }else{
+        //Atribui TRUE ao state para desbilitar botão ao executar função.
+        this.setState({ laoding: true });
+        //Faz a busca na api do github.
+        //[WARNING] Verificar PQ a api.get não ta buscando o baseUrl  
+        const response = await api.get(`http://api.github.com/repos/${newRepo}`);
+        //Cria objeto para guardar as informações que for necessária.
+        const data = {
+          name: response.data.full_name
+        };
+        console.log(data.name);
+      this.setState({
+        repositories: [...repositories, data],
+        newRepo: "",
+        laoding: false
+      });
+    }
   };
 
   render() {
