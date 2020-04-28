@@ -50,17 +50,28 @@ export default class Main extends Component {
         this.setState({ laoding: true });
         //Faz a busca na api do github.
         //[WARNING] Verificar PQ a api.get não ta buscando o baseUrl  
-        const response = await api.get(`http://api.github.com/repos/${newRepo}`);
+        const response = await api.get(`http://api.github.com/repos/${newRepo}`)
+        .then((response) => {
+          const data = {
+            name: response.data.full_name
+          };
+          this.setState({
+            repositories: [...repositories, data],
+            newRepo: "",
+            laoding: false
+          });  
+          console.log(response);
+        }, (error) => {
+          this.setState({
+            newRepo: "",
+            laoding: false
+          });
+
+          alert("Repositório não encontrado!");
+        });
+        ;
         //Cria objeto para guardar as informações que for necessária.
-        const data = {
-          name: response.data.full_name
-        };
-        console.log(data.name);
-      this.setState({
-        repositories: [...repositories, data],
-        newRepo: "",
-        laoding: false
-      });
+       
     }
   };
 
